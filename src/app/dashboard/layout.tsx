@@ -1,15 +1,16 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { getToken, logoutUser } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard } from 'lucide-react';
+import { LogOut, LayoutDashboard, Briefcase } from 'lucide-react';
 
 export default function DashboardLayout({children}: {
     children: React.ReactNode;
 }) {
 
     const router = useRouter();
+    const pathname = usePathname();
     const [isAuthorized, setIsAuthorized] = useState(true);
 
     useEffect(() => {
@@ -29,6 +30,8 @@ export default function DashboardLayout({children}: {
         return null;
     }
 
+    const isActive = (path: string) => pathname === path;
+
     return (
         <div className="min-h-screen bg-white">
             {/* Sidebar */}
@@ -41,9 +44,27 @@ export default function DashboardLayout({children}: {
 
                 {/* Navigation */}
                 <nav className="p-4 space-y-2">
-                    <a href="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-900 text-white border border-gray-700 hover:bg-gray-800 transition-all">
+                    <a 
+                        href="/dashboard" 
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${
+                            isActive('/dashboard')
+                                ? 'bg-gray-900 text-white border-gray-700'
+                                : 'text-gray-300 hover:bg-gray-900 hover:text-white border-transparent hover:border-gray-700'
+                        }`}
+                    >
                         <LayoutDashboard size={20} />
                         <span className="font-medium">Dashboard</span>
+                    </a>
+                    <a 
+                        href="/dashboard/positions" 
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${
+                            isActive('/dashboard/positions')
+                                ? 'bg-gray-900 text-white border-gray-700'
+                                : 'text-gray-300 hover:bg-gray-900 hover:text-white border-transparent hover:border-gray-700'
+                        }`}
+                    >
+                        <Briefcase size={20} />
+                        <span className="font-medium">Positions</span>
                     </a>
                 </nav>
 
